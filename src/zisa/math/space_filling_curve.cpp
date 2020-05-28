@@ -2,70 +2,74 @@
 
 namespace zisa {
 
-std::tuple<std::bitset<2>, HilbertTable::orientation_t>
-HilbertTable::operator()(const std::bitset<2> &coords,
-                         orientation_t orientation) const {
-  orientation_t SR = 0, SL = 1, NR = 2, NL = 3;
-  orientation_t WU = 4, WD = 5, EU = 6, ED = 7;
+std::bitset<2> hilbert_transform(const std::bitset<2> &digits,
+                                 std::array<unsigned short, 4> &sigma) {
 
-  std::bitset<2> OO("00"), OI("01"), IO("10"), II("11");
+  auto tile = sigma[digits.to_ulong()];
 
-  if (orientation == SR) {
-    auto a = std::array<std::tuple<std::bitset<2>, orientation_t>, 4>{
-        std::tuple{OO, WU}, {II, ED}, {OI, SR}, {IO, SR}};
+  auto tau = [](auto tile) {
+    if (tile == 0) {
+      return std::array<unsigned short, 4>{0, 3, 2, 1};
+    }
 
-    return a[coords.to_ulong()];
+    if (tile == 3) {
+      return std::array<unsigned short, 4>{2, 1, 0, 3};
+    }
+
+    return std::array<unsigned short, 4>{0, 1, 2, 3};
+  }(tile);
+
+  for (unsigned short i = 0; i < 4; ++i) {
+    sigma[i] = tau[sigma[i]];
   }
 
-  if (orientation == SL) {
-    auto a = std::array<std::tuple<std::bitset<2>, orientation_t>, 4>{
-        std::tuple{II, WD}, {OO, EU}, {IO, SL}, {IO, SR}};
+  return std::bitset<2>(tile);
+}
 
-    return a[coords.to_ulong()];
+namespace three_dimensional {
+
+PolyHilbertTable luna_curve() {
+  return {{{PolyHilbertState{/* q0 */ {0, 2, 1, 3, 4, 6, 5, 7}, 1},
+            PolyHilbertState{/* q1 */ {3, 7, 2, 6, 1, 5, 0, 4}, 1},
+            PolyHilbertState{/* q2 */ {6, 7, 2, 3, 4, 5, 0, 1}, 1},
+            PolyHilbertState{/* q3 */ {0, 1, 2, 3, 4, 5, 6, 7}, 1},
+
+            PolyHilbertState{/* q4 */ {6, 2, 4, 0, 7, 3, 5, 1}, 0},
+            PolyHilbertState{/* q5 */ {3, 7, 1, 5, 2, 6, 0, 4}, 0},
+            PolyHilbertState{/* q6 */ {5, 1, 7, 3, 4, 0, 6, 2}, 1},
+            PolyHilbertState{/* q7 */ {6, 4, 2, 0, 7, 5, 3, 1}, 1}},
+
+           {PolyHilbertState{/* q0 */ {0, 2, 1, 3, 4, 6, 5, 7}, 1},
+            PolyHilbertState{/* q1 */ {3, 1, 2, 0, 7, 5, 6, 4}, 1},
+            PolyHilbertState{/* q2 */ {6, 7, 2, 3, 4, 5, 0, 1}, 1},
+            PolyHilbertState{/* q3 */ {0, 1, 2, 3, 4, 5, 6, 7}, 0},
+
+            PolyHilbertState{/* q4 */ {6, 2, 4, 0, 7, 3, 5, 1}, 0},
+            PolyHilbertState{/* q5 */ {0, 4, 1, 5, 2, 6, 3, 7}, 0},
+            PolyHilbertState{/* q6 */ {5, 1, 7, 3, 4, 0, 6, 2}, 1},
+            PolyHilbertState{/* q7 */ {0, 4, 2, 6, 1, 5, 3, 7}, 1}}},
+          {{0, 7, 3, 4, 1, 6, 2, 5}, {0, 5, 3, 4, 1, 6, 2, 7}}};
+}
+
+std::bitset<3> hilbert_transform(const std::bitset<3> &xy,
+                                 PolyHilbertState &state,
+                                 PolyHilbertTable &table) {
+
+  auto octant = xy.to_ulong();
+  auto &[sigma, c] = state;
+
+  auto rot_octant = sigma[octant];
+
+  const auto &tau = std::get<0>(table.state_transform[c][rot_octant]);
+  const auto &generator = table.generators[c];
+  c = std::get<1>(table.state_transform[c][rot_octant]);
+
+  for (unsigned short i = 0; i < 8; ++i) {
+    sigma[i] = tau[sigma[i]];
   }
 
-  if (orientation == NR) {
-    auto a = std::array<std::tuple<std::bitset<2>, orientation_t>, 4>{
-        std::tuple{OI, NR}, {IO, NR}, {OO, WD}, {II, EU}};
+  return std::bitset<3>(generator[rot_octant]);
+}
 
-    return a[coords.to_ulong()];
-  }
-
-  if (orientation == NL) {
-    auto a = std::array<std::tuple<std::bitset<2>, orientation_t>, 4>{
-        std::tuple{IO, NL}, {OI, NL}, {II, WU}, {OO, ED}};
-
-    return a[coords.to_ulong()];
-  }
-
-  if (orientation == WU) {
-    auto a = std::array<std::tuple<std::bitset<2>, orientation_t>, 4>{
-        std::tuple{OO, SR}, {OI, WU}, {II, NL}, {IO, WU}};
-
-    return a[coords.to_ulong()];
-  }
-
-  if (orientation == WD) {
-    auto a = std::array<std::tuple<std::bitset<2>, orientation_t>, 4>{
-        std::tuple{II, SL}, {IO, WD}, {OO, NR}, {OI, WD}};
-
-    return a[coords.to_ulong()];
-  }
-
-  if (orientation == EU) {
-    auto a = std::array<std::tuple<std::bitset<2>, orientation_t>, 4>{
-        std::tuple{OI, EU}, {OO, SL}, {IO, EU}, {II, NR}};
-
-    return a[coords.to_ulong()];
-  }
-
-  if (orientation == ED) {
-    auto a = std::array<std::tuple<std::bitset<2>, orientation_t>, 4>{
-        std::tuple{IO, ED}, {II, SR}, {OI, ED}, {OO, NL}};
-
-    return a[coords.to_ulong()];
-  }
-
-  LOG_ERR("Failed.");
 }
 }

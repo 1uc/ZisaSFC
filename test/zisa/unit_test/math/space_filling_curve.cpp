@@ -12,6 +12,13 @@ TEST_CASE("Space Filling Curve; basics", "[math][sfc]") {
   REQUIRE(zisa::binary_digits<4>(0.00001) == std::bitset<4>("0000"));
 
   REQUIRE(std::bitset<6>(42) == std::bitset<6>("101010"));
+  auto forty_two = std::bitset<6>(42);
+  REQUIRE(forty_two[0] == 0);
+  REQUIRE(forty_two[1] == 1);
+  REQUIRE(forty_two[2] == 0);
+  REQUIRE(forty_two[3] == 1);
+  REQUIRE(forty_two[4] == 0);
+  REQUIRE(forty_two[5] == 1);
 
   auto level2 = std::vector<std::tuple<std::bitset<4>, std::bitset<4>>>{
       {std::bitset<4>("0000"), std::bitset<4>("0000")},
@@ -77,5 +84,31 @@ TEST_CASE("Space Filling Curve; basics", "[math][sfc]") {
 
       REQUIRE(zisa::hilbert_index<2>(x, y) == xy_l2[i + 4 * j]);
     }
+  }
+}
+
+TEST_CASE("Space Filling Curve 3D; basics", "[math][sfc]") {
+  auto level1 = std::vector<std::tuple<std::bitset<3>, std::bitset<3>>>{
+      {std::bitset<3>("000"), std::bitset<3>("000")},
+      {std::bitset<3>("001"), std::bitset<3>("111")},
+      {std::bitset<3>("010"), std::bitset<3>("011")},
+      {std::bitset<3>("011"), std::bitset<3>("100")},
+      {std::bitset<3>("100"), std::bitset<3>("001")},
+      {std::bitset<3>("101"), std::bitset<3>("110")},
+      {std::bitset<3>("110"), std::bitset<3>("010")},
+      {std::bitset<3>("111"), std::bitset<3>("101")},
+  };
+
+  for (auto [in, out] : level1) {
+    REQUIRE(zisa::three_dimensional::hilbert_index<1>(in) == out);
+  }
+
+  auto level2 = std::vector<std::tuple<std::bitset<6>, std::bitset<6>>>{
+      {std::bitset<6>("110101"), std::bitset<6>("010000")},
+      {std::bitset<6>("110110"), std::bitset<6>("010010")},
+      {std::bitset<6>("111111"), std::bitset<6>("101101")}};
+
+  for (auto [in, out] : level2) {
+    REQUIRE(zisa::three_dimensional::hilbert_index<2>(in) == out);
   }
 }
