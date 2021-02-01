@@ -33,7 +33,7 @@ target_include_directories(sfc PUBLIC
 )
 target_link_libraries(sfc PUBLIC sfc_dependencies)
 target_link_libraries(sfc PUBLIC Zisa::core)
-target_link_libraries(sfc PRIVATE warning_flags)
+target_link_libraries(sfc PRIVATE sfc_warning_flags)
 
 # -- clang tidy ----------------------------------------------------------------
 if(CLANG_TIDY_EXE)
@@ -57,7 +57,7 @@ install(
 
 add_library(Zisa::sfc ALIAS sfc)
 install(
-  TARGETS sfc sfc_dependencies
+  TARGETS sfc sfc_dependencies sfc_warning_flags
   EXPORT ZisaSFCTargets
 )
 include(GNUInstallDirs)
