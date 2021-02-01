@@ -24,7 +24,8 @@ endif()
 find_package(ZisaCore REQUIRED)
 
 # -- sfc -----------------------------------------------------------------------
-add_library(sfc SHARED "")
+add_library(sfc STATIC "")
+set_target_properties(sfc PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set_target_properties(sfc PROPERTIES OUTPUT_NAME zisa_sfc)
 set_target_properties(sfc PROPERTIES CXX_STANDARD 17)
 target_include_directories(sfc PUBLIC
