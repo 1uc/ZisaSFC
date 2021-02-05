@@ -22,6 +22,7 @@ endif()
 # This component does not actually require MPI. However, the core header
 # libraries depend on the value of `ZISA_HAS_MPI`.
 if(ZISA_HAS_MPI)
+  find_package(MPI REQUIRED COMPONENTS CXX)
   target_compile_definitions(sfc_dependencies INTERFACE ZISA_HAS_MPI=1)
 endif()
 
