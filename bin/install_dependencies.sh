@@ -1,8 +1,24 @@
 #! /usr/bin/env bash
 
-if [[ "$#" -ne 2 ]]
+if [[ "$#" -lt 2 ]]
 then
-    echo "Usage: $0 COMPILER DESTINATION"
+    echo "Usage: $0 COMPILER DESTINATION [--zisa_has_mpi=ZISA_HAS_MPI]"
+fi
+
+for arg in "$@"
+do
+    case $arg in
+        --zisa_has_mpi=*)
+            ZISA_HAS_MPI=${arg#*=}
+            ;;
+        *)
+            ;;
+    esac
+done
+
+if [[ -z "${ZISA_HAS_MPI}" ]]
+then
+    ZISA_HAS_MPI=0
 fi
 
 component_name="ZisaSFC"
@@ -10,7 +26,7 @@ zisa_dependencies=("ZisaCore")
 
 zisa_memory_root=$(realpath $(dirname $(readlink -f $0))/..)
 
-install_dir=$(${zisa_memory_root}/bin/install_dir.sh $1 $2)
+install_dir=$(${zisa_memory_root}/bin/install_dir.sh $1 $2 --zisa_has_mpi=${ZISA_HAS_MPI})
 source_dir=${install_dir}/sources
 
 echo ${install_dir}
@@ -38,6 +54,7 @@ do
 
     cmake -DCMAKE_INSTALL_PREFIX=${install_dir}/zisa \
           -DCMAKE_PREFIX_PATH=${install_dir}/zisa/lib/cmake/zisa \
+          -DCMAKE_MODULE_PATH=${install_dir}/conan \
           -DCMAKE_PROJECT_${dep}_INCLUDE=${install_dir}/conan/conan_paths.cmake \
           -DCMAKE_BUILD_TYPE=Release \
           ..
@@ -45,3 +62,6 @@ do
     cmake --build .
     cmake --install .
 done
+
+echo "The dependencies were installed at"
+echo "    ${install_dir}"
