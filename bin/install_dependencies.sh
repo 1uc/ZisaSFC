@@ -66,7 +66,7 @@ mkdir -p "${source_dir}"
 for dep in "${zisa_dependencies[@]}"
 do
     src_dir="${source_dir}/$dep"
-    repo_url=git@github.com:1uc/${dep}.git
+    repo_url=https://github.com/1uc/${dep}.git
 
     # If necessary and reasonable remove ${src_dir}.
     if [[ -d "${src_dir}" ]]
@@ -91,7 +91,6 @@ do
 
     ${CMAKE} -DCMAKE_INSTALL_PREFIX="${install_dir}/zisa" \
              -DCMAKE_PREFIX_PATH="${install_dir}/zisa/lib/cmake/zisa" \
-             -DCMAKE_MODULE_PATH="${install_dir}/conan" \
              -DCMAKE_PROJECT_${dep}_INCLUDE="${install_dir}/conan/conan_paths.cmake" \
              -DCMAKE_C_COMPILER="${CC}" \
              -DCMAKE_CXX_COMPILER="${CXX}" \
@@ -109,9 +108,9 @@ echo ""
 echo "Use"
 echo "    ${CMAKE} \\ "
 echo "        -DCMAKE_PROJECT_${component_name}_INCLUDE=${install_dir}/conan/conan_paths.cmake \\ "
-echo "        -DCMAKE_MODULE_PATH=${install_dir}/conan \\ "
 echo "        -DCMAKE_PREFIX_PATH=${install_dir}/zisa/lib/cmake/zisa \\ "
 echo "        -DCMAKE_C_COMPILER=${CC} \\ "
 echo "        -DCMAKE_CXX_COMPILER=${CXX} \\ "
-echo "        -DZISA_HAS_MPI=${ZISA_HAS_MPI} \\ "
-echo "        REMAINING_ARGS "
+echo "        -DZISA_HAS_CUDA=${ZISA_HAS_CUDA} \\ "
+echo "        -DCMAKE_BUILD_TYPE=FastDebug \\ "
+echo "        -B build \\ "

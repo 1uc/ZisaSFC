@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 project(ZisaSFC VERSION 0.1)
+if(ZISA_HAS_CUDA)
+  message(AUTHOR_WARNING "You're the first to use CUDA. Please report (or fix) issues.")
+  enable_language(CUDA)
+endif()
 
 include("cmake/has_build_type.cmake")
 include("cmake/warning_flags.cmake")
