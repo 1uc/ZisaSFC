@@ -22,8 +22,6 @@ be replaced with the compiler you want to use. The available `DEPENDENCY_FLAGS`
 are
 
   * `--zisa_has_cuda={0,1}` to request CUDA.
-  * `--zisa_has_hdf5={0,1}` to request HDF5 support for arrays.
-  * `--zisa_has_netcdf={0,1}` to request NetCDF support for arrays.
   * `--zisa_has_mpi={0,1}` which defaults to `1`.
 
 If this worked continue by running the `cmake` command and compiling the
