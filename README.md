@@ -21,8 +21,8 @@ part of the CMake command needed to include the dependencies. `COMPILER` must
 be replaced with the compiler you want to use. The available `DEPENDENCY_FLAGS`
 are
 
-  * `--zisa_has_cuda={0,1}` to request CUDA.
-  * `--zisa_has_mpi={0,1}` which defaults to `1`.
+  * `--zisa_has_mpi={0,1}` to request MPI.
+  * `--zisa_has_cuda={0,1}` to request CUDA (experimental).
 
 If this worked continue by running the `cmake` command and compiling the
 library. Take a look at the [project specific flags] for CMake if you want to
