@@ -1,4 +1,7 @@
 # ZisaSFC
+[![Build Status](https://github.com/1uc/ZisaSFC/actions/workflows/basic_integrity_checks.yml/badge.svg)](https://github.com/1uc/ZisaSFC/actions)
+[![Docs Status](https://github.com/1uc/ZisaSFC/actions/workflows/publish_docs.yml/badge.svg)](https://1uc.github.io/ZisaSFC)
+
 ZisaSFC is strives to compute space-filling curves in two and three dimension.
 Currently, the Hilbert curve in 2D and a generalized Hilbert curve called Luna
 \[[1]\] are implemented.
