@@ -1,9 +1,9 @@
 # ZisaSFC
 ZisaSFC is strives to compute space-filling curves in two and three dimension.
 Currently, the Hilbert curve in 2D and a generalized Hilbert curve called Luna
-\[[1]\] are implemented.
+\[1\] are implemented.
 
-[1]: https://arxiv.org/abs/1109.2323
+\[1\]: [https://arxiv.org/abs/1109.2323](https://arxiv.org/abs/1109.2323)
 
 ## Quickstart
 Start by cloning the repository
