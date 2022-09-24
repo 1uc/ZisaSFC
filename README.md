@@ -14,7 +14,14 @@ Start by cloning the repository
 
     $ git clone https://github.com/1uc/ZisaSFC.git
 
-and change into the newly created directory. Then proceed to install the
+and change into the newly created directory. If you already have Catch2
+installed. You can simply build using standard `cmake` commands. There's a
+build type called `FastDebug` which keeps asserts and debug symbols but has
+optimizations turned on.
+
+### Dependencies
+
+If you don't have Catch2 installed yet, you can proceed by installing the
 dependencies:
 
     $ bin/install_dir.sh COMPILER DIRECTORY
