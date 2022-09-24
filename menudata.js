@@ -39,4 +39,4 @@ var menudata={children:[
 {text:"Variables",url:"functions_vars.html"}]}]},
 {text:"Files",url:"files.html",children:[
 {text:"File List",url:"files.html"}]},
-{text:"Github Page",url:"https://github.com/1uc/ZisaSFC"}]}
+{text:"Github Page",url:"^https://github.com/1uc/ZisaSFC"}]}

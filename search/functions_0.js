@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['binary_5fdigits_40',['binary_digits',['../namespacezisa.html#a4e7ca92d74772f22a8d1b9f257be2118',1,'zisa']]]
+  ['binary_5fdigits_0',['binary_digits',['../namespacezisa.html#ab5075eba9d9a7b8442d4e4a774c85f30',1,'zisa']]]
 ];
