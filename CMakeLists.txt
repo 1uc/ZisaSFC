@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 project(ZisaSFC VERSION 0.1)
-if(ZISA_HAS_CUDA)
-  enable_language(CUDA)
-endif()
 
 include("cmake/has_build_type.cmake")
 include("cmake/warning_flags.cmake")
@@ -17,22 +14,7 @@ add_library(sfc_dependencies INTERFACE)
 # experimental/filesystem
 target_link_libraries(sfc_dependencies INTERFACE stdc++fs)
 
-# Logging
-if(ZISA_LOG_LEVEL)
-  target_compile_definitions(sfc_dependencies INTERFACE ZISA_LOG_LEVEL=${ZISA_LOG_LEVEL})
-endif()
-
-# This component does not actually require MPI. However, the core header
-# libraries depend on the value of `ZISA_HAS_MPI`.
-if(ZISA_HAS_MPI)
-  find_package(MPI REQUIRED COMPONENTS CXX)
-  target_compile_definitions(sfc_dependencies INTERFACE ZISA_HAS_MPI=1)
-endif()
-
 # -- Zisa ----------------------------------------------------------------------
-# -- core ----------------------------------------------------------------------
-find_package(ZisaCore REQUIRED)
-
 # -- sfc -----------------------------------------------------------------------
 add_library(sfc STATIC "")
 set_target_properties(sfc PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -43,7 +25,6 @@ target_include_directories(sfc PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(sfc PUBLIC sfc_dependencies)
-target_link_libraries(sfc PUBLIC Zisa::core)
 target_link_libraries(sfc PRIVATE sfc_warning_flags)
 
 # -- clang tidy ----------------------------------------------------------------

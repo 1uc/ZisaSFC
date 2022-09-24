@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2021 ETH Zurich, Luc Grosheintz-Laval
 
-#include <zisa/testing/testing_framework.hpp>
+#include <catch2/catch.hpp>
 
 #include <zisa/math/space_filling_curve.hpp>
 

@@ -4,12 +4,11 @@
 #ifndef ZISA_SPACE_FILLING_CURVE_HPP_XYGQB
 #define ZISA_SPACE_FILLING_CURVE_HPP_XYGQB
 
-#include <zisa/config.hpp>
-
+#include <cassert>
 #include <array>
 #include <bitset>
 #include <vector>
-#include <zisa/io/format_as_list.hpp>
+#include <tuple>
 
 namespace zisa {
 
@@ -139,6 +138,5 @@ std::bitset<3 * N> hilbert_index(double x, double y, double z) {
   return three_dimensional::hilbert_index<N>(coords);
 }
 
-namespace v2 {}
 }
 #endif // ZISA_SPACE_FILLING_CURVE_HPP
