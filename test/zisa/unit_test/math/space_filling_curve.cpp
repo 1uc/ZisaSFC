@@ -3,6 +3,9 @@
 
 #include <catch2/catch.hpp>
 
+#include <iostream>
+
+#include <vector>
 #include <zisa/math/space_filling_curve.hpp>
 
 TEST_CASE("Space Filling Curve; basics", "[math][sfc]") {
@@ -114,4 +117,122 @@ TEST_CASE("Space Filling Curve 3D; basics", "[math][sfc]") {
   for (auto [in, out] : level2) {
     REQUIRE(zisa::three_dimensional::hilbert_index<2>(in) == out);
   }
+}
+
+template <size_t n_dims>
+static std::array<double, n_dims> box_center(std::array<int, n_dims> i, int n) {
+  auto x = std::array<double, n_dims>{};
+  for (size_t k = 0; k < n_dims; ++k) {
+    x[k] = (i[k] + 0.5) / n;
+  }
+
+  return x;
+}
+
+bool is_safe_dir(int i, int n) { return 0 <= i && i < n; };
+
+template <size_t n_dims>
+bool is_safe_dir(std::array<int, n_dims> i, int n) {
+  for (size_t k = 0; k < n_dims; ++k) {
+    if (!is_safe_dir(i[k], n)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+template<size_t n_dims>
+int count_cells(int n) {
+  int N = 1;
+  for(size_t k = 0; k < n_dims; k++) {
+    N *= n;
+  }
+
+  return N;
+}
+
+template <size_t n_dims>
+std::vector<std::array<int, n_dims>> all_multi_indexes(int n) {
+  auto N = count_cells<n_dims>(n);
+  std::vector<std::array<int, n_dims>> i(N);
+
+  for (size_t j = 0; j < i.size(); ++j) {
+    int ld = 1;
+    for (size_t k = 0; k < n_dims; ++k) {
+      i[j][k] = (j / ld) % n;
+      ld *= n;
+    }
+  }
+
+  return i;
+}
+
+template <size_t n_dims>
+std::array<int, n_dims> add_multi_indexes(const std::array<int, n_dims> &i,
+                                          const std::array<int, n_dims> &j) {
+  auto ipj = std::array<int, n_dims>{};
+  for (size_t k = 0; k < n_dims; ++k) {
+    ipj[k] = i[k] + j[k];
+  }
+
+  return ipj;
+}
+
+template<size_t n_dims, int n_levels>
+void check_sfc_is_continuous(const std::vector<std::array<int, n_dims>>& cardinal_directions) {
+  int n = 1 << n_levels;
+
+  auto multi_indexes = all_multi_indexes<n_dims>(n);
+  for (auto i : multi_indexes) {
+    auto x = box_center(i, n);
+    auto idx_self = zisa::hilbert_index<n_levels>(x).to_ulong();
+
+    auto path = std::bitset<2*n_dims>{};
+
+    for (size_t l = 0; l < cardinal_directions.size(); ++l) {
+      auto ii = add_multi_indexes(i, cardinal_directions[l]);
+
+      if (is_safe_dir(ii, n)) {
+        auto xx = box_center(ii, n);
+        auto idx_neighbour = zisa::hilbert_index<n_levels>(xx).to_ulong();
+
+        auto diff = abs(int(idx_self) - int(idx_neighbour));
+        REQUIRE(diff > 0);
+
+        if (diff == 1) {
+          path[l] = true;
+        }
+      }
+    }
+
+    if (idx_self == 0u || idx_self == (1u << n_dims * n_levels) - 1) {
+      REQUIRE(path.count() == 1);
+    } else {
+      REQUIRE(path.count() == 2);
+    }
+  }
+}
+
+TEST_CASE("Space Filling Curve 2D; continuous", "[math][sfc]") {
+  constexpr int n_dims = 2;
+  constexpr int n_levels = 5;
+
+  auto cardinal_directions = std::vector<std::array<int, n_dims>>{
+      {-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+
+  check_sfc_is_continuous<n_dims, n_levels>(cardinal_directions);
+}
+
+
+TEST_CASE("Space Filling Curve 3D; continuous", "[math][sfc]") {
+  constexpr int n_dims = 3;
+  constexpr int n_levels = 5;
+
+  auto cardinal_directions = std::vector<std::array<int, n_dims>>{
+      {-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}};
+
+
+  check_sfc_is_continuous<n_dims, n_levels>(cardinal_directions);
 }

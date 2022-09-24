@@ -68,6 +68,12 @@ std::bitset<2 * N> hilbert_index(double x, double y) {
   return hilbert_index<N>(coords);
 }
 
+template <int N>
+std::bitset<2 * N> hilbert_index(std::array<double, 2> xy) {
+  auto [x, y] = xy;
+  return hilbert_index<N>(x, y);
+}
+
 namespace three_dimensional {
 using PolyHilbertState
     = std::tuple<std::array<unsigned short, 8>, unsigned short>;
@@ -136,6 +142,12 @@ std::bitset<3 * N> hilbert_index(double x, double y, double z) {
   }
 
   return three_dimensional::hilbert_index<N>(coords);
+}
+
+template <int N>
+std::bitset<3 * N> hilbert_index(std::array<double, 3> xyz) {
+  auto [x, y, z] = xyz;
+  return hilbert_index<N>(x, y, z);
 }
 
 }
