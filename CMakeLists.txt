@@ -8,6 +8,8 @@ include("cmake/sanitizers.cmake")
 include("cmake/gperftools.cmake")
 include("cmake/clang_tidy.cmake")
 
+set(ZisaSFC_BUILD_TESTS On CACHE BOOL "Should tests be built?")
+
 # -- Dependencies --------------------------------------------------------------
 add_library(sfc_dependencies INTERFACE)
 
@@ -63,17 +65,20 @@ install(EXPORT ZisaSFCTargets
 
 
 # -- Tests ---------------------------------------------------------------------
-find_package(Catch2 REQUIRED)
+if( ${ZisaSFC_BUILD_TESTS} )
+  find_package(Catch2 REQUIRED)
 
-add_executable(sfc_unit_tests "")
-set_target_properties(sfc_unit_tests PROPERTIES OUTPUT_NAME unit_tests)
-set_target_properties(sfc_unit_tests PROPERTIES CXX_STANDARD 17)
-target_include_directories(sfc_unit_tests PUBLIC test)
-target_link_libraries(sfc_unit_tests PUBLIC Zisa::sfc Catch2::Catch2)
+  add_executable(sfc_unit_tests "")
+  set_target_properties(sfc_unit_tests PROPERTIES OUTPUT_NAME unit_tests)
+  set_target_properties(sfc_unit_tests PROPERTIES CXX_STANDARD 17)
+  target_include_directories(sfc_unit_tests PUBLIC test)
+  target_link_libraries(sfc_unit_tests PUBLIC Zisa::sfc Catch2::Catch2)
 
-enable_testing()
-add_test(NAME UnitTests COMMAND unit_tests)
+  enable_testing()
+  add_test(NAME UnitTests COMMAND unit_tests)
+
+  add_subdirectory(test)
+endif()
 
 # -- Subdirectories ------------------------------------------------------------
 add_subdirectory(src)
-add_subdirectory(test)
