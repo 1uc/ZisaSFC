@@ -11,16 +11,21 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        compiler: [[gcc, g++], [clang, clang++]]
+        include:
+          - os: ubuntu-22.04
+            compiler: [gcc, g++]
+
+          - os: ubuntu-22.04
+            compiler: [clang, clang++]
+
+          - os: macos-13
+            compiler: [clang, clang++]
 
     env:
-      ZISA_COMPONENT: ZisaSFC
-      COMPILER: ${{ matrix.compiler[0] }}
-      REL_INSTALL_ROOT: zisa_dependencies
       CC: ${{ matrix.compiler[0] }}
       CXX: ${{ matrix.compiler[1] }}
 
