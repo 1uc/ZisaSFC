@@ -66,7 +66,7 @@ install(EXPORT ZisaSFCTargets
 
 # -- Tests ---------------------------------------------------------------------
 if( ${ZisaSFC_BUILD_TESTS} )
-  find_package(Catch2 REQUIRED)
+  add_subdirectory(third_party/Catch2)
 
   add_executable(sfc_unit_tests "")
   set_target_properties(sfc_unit_tests PROPERTIES OUTPUT_NAME unit_tests)
