@@ -13,9 +13,6 @@ set(ZisaSFC_BUILD_TESTS On CACHE BOOL "Should tests be built?")
 # -- Dependencies --------------------------------------------------------------
 add_library(sfc_dependencies INTERFACE)
 
-# experimental/filesystem
-target_link_libraries(sfc_dependencies INTERFACE stdc++fs)
-
 # -- Zisa ----------------------------------------------------------------------
 # -- sfc -----------------------------------------------------------------------
 add_library(sfc STATIC "")
